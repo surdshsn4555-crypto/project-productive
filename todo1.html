@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="max-w-7xl mx-auto p-6">
+        <div class="flex justify-between">
+            <div class="text-5xl font-bold mb-8">TODO LIST</div>
+            <div><a href="index.html">X</a></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- left column -->
+             <div class="bg-gray-300 rounded-lg p-7 h-120">
+
+                <input 
+                id="task" 
+                type="text"
+                 placeholder="Enter Task"
+                  class="w-full bg-gray-800 text-white rounded-lg p-5">
+
+                <textarea 
+                
+                id="detail" 
+                rows="7"
+                 placeholder="Enter Data"
+                 class="w-full bg-gray-800 text-white rounded-lg p-5 mt-2" >
+                </textarea>
+
+                <div>
+                    <input type="checkbox"
+                    id="imp">
+                    <label for="imp">Important Task</label>
+                </div>
+
+                <button class="w-full h-12 bg-gray-400 hover:bg-gray-500 text-white rounded-lg p-2   mt-2">ADD TASK</button>
+
+             </div>
+
+             <!-- right column -->
+              <div class="h-120 bg-gray-300 rounded-lg">
+                <div id="taskcolumn">
+                    <!-- <div class="h-20 w-(full-10) flex justify-between item-center bg-gray-500 rounded-md p-5 m-5">
+                        <div>hello
+                            <span class=" text-red-600 ">*</span>
+                        </div>
+                        <button class="bg-white rounded-md p-2">Complete Task</button>
+                    </div>
+                    <div class="h-25 flex justify-between item-center bg-gray-50 rounded-md p-5 m-5">
+                        <p>Detail</p>
+                    </div> -->
+                    <!-- for input in javascript code -->
+                </div>
+              </div>
+        </div>
+
+    </div>
+    <script src="todo.js"></script>
+</body>
+</html>
