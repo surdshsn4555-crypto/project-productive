@@ -92,3 +92,50 @@
     transition: opacity 400ms ease, transform 400ms ease;
   }
   .scene:hover .hint { opacity: 1; transform: translateY(0); }
+
+  /* Theme Button */
+
+.theme-toggle-btn{
+    padding:6px 12px;
+    border-radius:9999px;
+    color:white;
+    transition:.3s;
+}
+
+.theme-toggle-btn:hover{
+    background:rgba(255,255,255,.15);
+}
+
+/* Light Theme */
+
+.light-theme{
+    color:#111827;
+}
+
+.light-theme .glass{
+    background:rgba(255,255,255,.45);
+    backdrop-filter:blur(18px);
+}
+
+.light-theme .ui-text-primary,
+.light-theme .ui-text-secondary,
+.light-theme .ui-text-tertiary{
+    color:#111827;
+}
+
+/* Dark Theme */
+
+.dark-theme{
+    color:white;
+}
+
+.dark-theme .glass{
+    background:rgba(0,0,0,.35);
+    backdrop-filter:blur(18px);
+}
+
+.dark-theme .ui-text-primary,
+.dark-theme .ui-text-secondary,
+.dark-theme .ui-text-tertiary{
+    color:white;
+}
