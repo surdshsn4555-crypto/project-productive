@@ -1,0 +1,94 @@
+
+  * { font-family: 'Space Grotesk', sans-serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 1400ms ease-in-out, transform 8s ease-out;
+    opacity: 0;
+  }
+
+  .scene:hover .bg-layer { transform: scale(1.06); }
+
+  /* Fail-safe default: day picture shows first, always, even before JS
+     determines the real period. */
+  .bg-day-1 { opacity: 1; }
+
+  /* Driven by data-period on the scene wrapper once JS runs (day: 6am-5pm, night: 6pm-5am).
+     Each period has two variants: the base (-1) and its hover reveal (-2). */
+  .scene[data-period="day"] .bg-day-1   { opacity: 1; }
+  .scene[data-period="day"]:hover .bg-day-1   { opacity: 0; }
+  .scene[data-period="day"]:hover .bg-day-2   { opacity: 1; }
+
+  .scene[data-period="night"] .bg-day-1   { opacity: 0; }
+  .scene[data-period="night"] .bg-night-1 { opacity: 1; }
+  .scene[data-period="night"]:hover .bg-night-1 { opacity: 0; }
+  .scene[data-period="night"]:hover .bg-night-2 { opacity: 1; }
+
+  .glass {
+    background: rgba(15, 23, 35, 0.35);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.14);
+    transition: background 400ms ease, border-color 400ms ease;
+  }
+
+  /* ---- UI theme (independent of the day/night scene photo) ---- */
+  #topbar-clock, .mono, #time-line, #temp-line { transition: color 400ms ease; }
+
+  [data-ui-theme="light"] .glass {
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(15, 23, 35, 0.10);
+  }
+  [data-ui-theme="light"] #topbar-wrap {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-bottom-color: rgba(15,23,35,0.10) !important;
+  }
+  [data-ui-theme="light"] .wash {
+    background: linear-gradient(to top, rgba(255,255,255,0.55), rgba(255,255,255,0.05), rgba(255,255,255,0.25)) !important;
+  }
+  [data-ui-theme="light"] .ui-text-primary { color: #0f1723 !important; }
+  [data-ui-theme="light"] .ui-text-secondary { color: rgba(15,23,35,0.65) !important; }
+  [data-ui-theme="light"] .ui-text-tertiary { color: rgba(15,23,35,0.45) !important; }
+  [data-ui-theme="light"] .ui-hairline { background-color: rgba(15,23,35,0.12) !important; }
+  [data-ui-theme="light"] .ui-pill {
+    background: rgba(15,23,35,0.06) !important;
+    border-color: rgba(15,23,35,0.12) !important;
+    color: #0f1723 !important;
+  }
+  [data-ui-theme="light"] .ui-pill:hover { background: rgba(15,23,35,0.12) !important; }
+  [data-ui-theme="light"] #hint-pill {
+    background: rgba(255,255,255,0.65) !important;
+    border-color: rgba(15,23,35,0.12) !important;
+    color: #0f1723 !important;
+  }
+
+  .theme-toggle-btn {
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 9999px;
+    transition: background 250ms ease, color 250ms ease;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .theme-toggle-btn.active {
+    background: rgba(255,255,255,0.85);
+    color: #0f1723;
+  }
+  [data-ui-theme="light"] .theme-toggle-btn.active {
+    background: rgba(15,23,35,0.85);
+    color: #ffffff;
+  }
+
+  .tick {
+    animation: tick 1s steps(1) infinite;
+  }
+  @keyframes tick { 50% { opacity: 0.55; } }
+
+  .hint {
+    transition: opacity 400ms ease, transform 400ms ease;
+  }
+  .scene:hover .hint { opacity: 1; transform: translateY(0); }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productivity Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+</head>
+<body class="bg-black">
+
+<div class="scene relative w-full h-screen overflow-hidden select-none" id="scene" data-period="day">
+
+  <!-- Day: base (soft morning light) -->
+  <div class="bg-layer bg-day-1" style="background-image:url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=1920&auto=format&fit=crop');"></div>
+  <!-- Day: hover reveal (brighter, more lit) -->
+  <div class="bg-layer bg-day-2" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1920&auto=format&fit=crop');"></div>
+  <!-- Night: base (misty blue night, matches reference) -->
+  <div class="bg-layer bg-night-1" style="background-image:url('https://images.unsplash.com/photo-1487621167305-5d248087c724?q=80&w=1920&auto=format&fit=crop');"></div>
+  <!-- Night: hover reveal (deeper, darker night) -->
+  <div class="bg-layer bg-night-2" style="background-image:url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=1920&auto=format&fit=crop');"></div>
+
+  <!-- readability wash -->
+  <div class="wash absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-slate-950/40 pointer-events-none"></div>
+
+  <!-- top bar -->
+  <div id="topbar-wrap" class="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-2 mono text-[11px] ui-text-secondary bg-white/5 backdrop-blur-md border-b border-white/10">
+    <span class="tracking-wide ui-text-secondary">Productivity Dashboard</span>
+
+    <div class="flex items-center gap-3">
+      <!-- light / dark theme toggle -->
+      <div class="flex items-center gap-0.5 bg-slate-950/40 border border-white/10 rounded-full p-0.5" id="theme-toggle-group">
+        <button id="theme-light-btn" class="theme-toggle-btn" title="Light theme">☀️</button>
+        <button id="theme-dark-btn" class="theme-toggle-btn active" title="Dark theme">🌙</button>
+      </div>
+
+      <!-- manual time setter -->
+      <div class="ui-pill flex items-center gap-1.5 bg-slate-950/40 border border-white/10 rounded-full px-2 py-1">
+        <select id="hour-select" class="bg-transparent ui-text-secondary outline-none mono text-[11px] appearance-none px-1"></select>
+        <span class="ui-text-tertiary">:</span>
+        <select id="minute-select" class="bg-transparent ui-text-secondary outline-none mono text-[11px] appearance-none px-1"></select>
+        <select id="period-select" class="bg-transparent ui-text-secondary outline-none mono text-[11px] appearance-none px-1">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+        <button id="set-time-btn" class="ml-1 px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 ui-text-secondary transition-colors">Set</button>
+        <button id="live-time-btn" class="px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 ui-text-tertiary transition-colors" title="Resume live clock">● Live</button>
+      </div>
+      <span class="tracking-wide ui-text-secondary" id="topbar-clock">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- hover hint -->
+  <div id="hint-pill" class="hint absolute top-14 left-1/2 -translate-x-1/2 opacity-0 -translate-y-1 mono text-[11px] ui-text-secondary bg-slate-950/40 px-3 py-1 rounded-full border border-white/10">
+    <span id="hint-label">brighter day</span>
+  </div>
+
+  <!-- main clock / weather card, bottom-left, like the reference -->
+  <div class="absolute left-8 bottom-10 md:left-14 md:bottom-14 flex flex-col md:flex-row items-start gap-0 rounded-2xl overflow-hidden glass shadow-2xl shadow-black/40">
+
+    <!-- date + time -->
+    <div class="px-7 py-6 min-w-[280px]">
+      <div class="mono text-xs tracking-[0.2em] ui-text-secondary uppercase" id="date-line">Saturday, 4 July 2026</div>
+      <div class="ui-text-primary text-white text-4xl md:text-5xl font-semibold tracking-tight mt-1 leading-none" id="time-line">
+        10:27<span class="tick ui-text-secondary">:</span>15 <span class="text-2xl align-top ui-text-secondary">PM</span>
+      </div>
+      <div class="mt-3 ui-text-secondary text-sm tracking-wide" id="location-line">Bokaro (JH)</div>
+    </div>
+
+    <div class="ui-hairline hidden md:block w-px self-stretch bg-white/15"></div>
+
+    <!-- weather -->
+    <div class="px-7 py-6 min-w-[220px]">
+      <div class="ui-text-primary text-white text-3xl font-semibold" id="temp-line">29.3°C</div>
+      <div class="ui-text-secondary text-sm mt-1" id="condition-line">Patchy rain nearby</div>
+      <div class="mono text-[11px] ui-text-tertiary mt-4 space-y-1 leading-relaxed">
+        <div>Heat index<span class="ui-text-secondary">33.9°C</span></div>
+        <div>Humidity<span class="ui-text-secondary">73%</span></div>
+        <div>Wind<span class="ui-text-secondary">14.8 km/h</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- feature launcher rail -->
+  <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+    <button id="todo-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="To-Do list">
+      <span>✅</span><span class="text-[10px] mono ui-text-secondary">Task</span>
+    </button>
+    <button id="goal-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Daily goals">
+      <span>🎯</span><span class="text-[10px] mono ui-text-secondary">Goal</span>
+    </button>
+    <button id="planner-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Daily planner">
+      <span>🗓️</span><span class="text-[10px] mono ui-text-secondary">Planner</span>
+    </button>
+    <button id="quotes-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Motivation quote">
+      <span>💬</span><span class="text-[10px] mono ui-text-secondary">Quotes</span>
+    </button>
+    <button id="timer-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Pomodoro timer">
+      <span>⏱️</span><span class="text-[10px] mono ui-text-secondary">Timer</span>
+    </button>
+  </div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+</body>
+</html>
