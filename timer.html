@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Timer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white min-h-screen">
+
+    <!-- Header -->
+    <div class="flex justify-between p-6">
+        <h1 class="text-3xl font-bold text-gray-800">Study with me!</h1>
+        <button class="text-2xl font-bold text-gray-500 hover:text-red-500">
+           <a href="index.html">X</a> 
+        </button>
+    </div>
+
+    <!-- Timer Section -->
+    <div class="flex flex-col items-center justify-center mt-32">
+
+        <!-- Session Label -->
+        <div class="bg-cyan-50 px-6 py-2 rounded-md mb-12">
+            <span class="font-semibold text-gray-700">Work Session</span>
+        </div>
+
+        <!-- Timer -->
+        <h1 id="timer" class="text-8xl font-bold text-gray-600 mb-8">
+            25:00
+        </h1>
+
+        <!-- Buttons -->
+        <div class="flex gap-4">
+            <button
+                id="startBtn"
+                class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded">
+                Start
+            </button>
+
+            <button
+                id="pauseBtn"
+                class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded">
+                Pause
+            </button>
+
+            <button
+                id="resetBtn"
+                class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded">
+                Reset
+            </button>
+        </div>
+
+    </div>
+
+    <script src="timer.js"></script>
+
+</body>
+</html>
