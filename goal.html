@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="max-w-7xl mx-auto p-6">
+        <div class="flex justify-between">
+            <div class="text-5xl font-bold mb-8">Goal</div>
+            <div><a href="index.html">x</a></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- left column -->
+             <div class="bg-gray-300 rounded-lg p-7 h-120">
+
+                <input 
+                id="task" 
+                type="text"
+                 placeholder="Enter Goal"
+                  class="w-full bg-gray-800 text-white rounded-lg p-5">
+
+                <textarea 
+                id="detail" 
+                rows="7"
+                 placeholder="Enter Goal"
+                 class="w-full bg-gray-800 text-white rounded-lg p-5 mt-2" >Enter Goal
+                </textarea>
+
+                <button  id="addGoalBtn" class="w-full h-12 bg-gray-400 hover:bg-gray-500 text-white rounded-lg p-2   mt-2">ADD Goal</button>
+
+             </div>
+
+             <!-- right column -->
+              <div class="h-120 bg-gray-300 rounded-lg">
+                <div id="taskcolumn">
+                    <!-- <div class="h-20 w-(full-10) flex justify-between item-center bg-gray-500 rounded-md p-5 m-5">
+                        <div>hello
+                        </div>
+                        <button class="bg-red-500 h-10 w-15 text-white rounded-md p-2">Delete</button>
+                    </div>
+                    <div class="h-25 flex justify-between item-center bg-gray-50 rounded-md p-5 m-5">
+                        <p>Detail</p>
+                        <button class="bg-yellow-400 h-10 w-20 rounded-md">Mark Goal</button>
+                    </div> -->
+                    <!-- for input in javascript -->
+                </div>
+              </div>
+        </div>
+
+    </div>
+    <script src="goal.js"></script>
+</body>
+</html>
