@@ -1,0 +1,127 @@
+* { box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
+
+.bg-weather-bg {
+  background: linear-gradient(180deg, #b9c3ca 0%, #dfe3e6 100%);
+  padding: 24px;
+}
+
+.weatherCard {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 32px 28px 36px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+  text-align: center;
+}
+
+/* ================= SEARCH ================= */
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.searchRow input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1.25rem;
+  color: #333;
+  background: transparent;
+}
+
+.searchRow input::placeholder {
+  color: #b7b7b7;
+}
+
+.searchRow button {
+  border: none;
+  background: none;
+  color: #333;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.15s ease-in-out;
+}
+
+.searchRow button:hover {
+  transform: scale(1.08);
+  color: #555;
+}
+
+/* ================= STATUS ================= */
+
+.statusMsg {
+  min-height: 20px;
+  color: #c0392b;
+  font-size: 0.85rem;
+  margin: 10px 0 0;
+}
+
+/* ================= ICON ================= */
+
+.weatherIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 28px auto 8px;
+  height: 170px;
+}
+
+.weatherIcon svg {
+  width: 190px;
+  height: 170px;
+}
+
+/* ================= TEMP / CONDITION ================= */
+
+.tempValue {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #2b2f36;
+  margin: 4px 0 0;
+}
+
+.conditionText {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2b2f36;
+  margin: 6px 0 30px;
+}
+
+/* ================= STATS ================= */
+
+.statsRow {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 22px;
+  border-top: 1px solid #eee;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statIcon {
+  font-size: 1.4rem;
+}
+
+.statValue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2b2f36;
+  text-align: left;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: #777;
+  text-align: left;
+}

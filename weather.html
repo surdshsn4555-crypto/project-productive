@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="weather.css">
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-weather-bg">
+
+  <div class="weatherCard">
+    <div class="flex justify-between font-black text-2xl">
+        <div>weather</div>
+        <div><a href="index.html">X</a></div>
+    </div>
+
+    <!-- ================= SEARCH ================= -->
+    <div class="searchRow">
+      <input
+        id="locationInput"
+        type="text"
+        placeholder="Enter Your Location"
+        autocomplete="off"
+      />
+      <button id="searchBtn" aria-label="Search location">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ================= STATUS / ERROR ================= -->
+    <p id="statusMsg" class="statusMsg"></p>
+
+    <!-- ================= ICON ================= -->
+    <div id="weatherIcon" class="weatherIcon"></div>
+
+    <!-- ================= TEMP + CONDITION ================= -->
+    <h1 id="tempValue" class="tempValue">--°C</h1>
+    <p id="conditionText" class="conditionText">&nbsp;</p>
+
+    <!-- ================= HUMIDITY / WIND ================= -->
+    <div class="statsRow">
+      <div class="statItem">
+        <span class="statIcon">💧</span>
+        <div>
+          <div id="humidityValue" class="statValue">--%</div>
+          <div class="statLabel">Humidity</div>
+        </div>
+      </div>
+
+      <div class="statItem">
+        <span class="statIcon">🌬️</span>
+        <div>
+          <div id="windValue" class="statValue">-- km/h</div>
+          <div class="statLabel">Wind Speed</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script src="weather.js"></script>
+</body>
+</html>
