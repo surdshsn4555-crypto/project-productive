@@ -1,459 +1,185 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-    // ===============================
-    // Elements
-    // ===============================
-
-    const clock = document.getElementById("clock");
-    const bigClock = document.getElementById("bigClock");
-    const date = document.getElementById("date");
-
-    const hour = document.getElementById("hour");
-    const minute = document.getElementById("minute");
-    const ampm = document.getElementById("ampm");
-
-    const setTime = document.getElementById("setTime");
-    const liveBtn = document.getElementById("liveBtn");
-
-    let liveMode = true;
-    let manualDate = new Date();
-
-    // ===============================
-    // Fill Select Options
-    // ===============================
-
-    for (let i = 1; i <= 12; i++) {
-
-        const option = document.createElement("option");
-
-        option.value = i;
-        option.textContent = String(i).padStart(2, "0");
-
-        hour.appendChild(option);
-
-    }
-
-    for (let i = 0; i < 60; i++) {
-
-        const option = document.createElement("option");
-
-        option.value = i;
-        option.textContent = String(i).padStart(2, "0");
-
-        minute.appendChild(option);
-
-    }
-
-    // ===============================
-    // Update Clock
-    // ===============================
-
-    function updateClock() {
-
-        let now;
-
-        if (liveMode) {
-
-            now = new Date();
-
-        } else {
-
-            now = manualDate;
-
-            manualDate = new Date(manualDate.getTime() + 1000);
-
-        }
-
-        let h = now.getHours();
-        let m = now.getMinutes();
-        let s = now.getSeconds();
-
-        let period = h >= 12 ? "PM" : "AM";
-
-        let displayHour = h % 12;
-
-        if (displayHour === 0) {
-
-            displayHour = 12;
-
-        }
-
-        // Navbar Clock
-
-        clock.innerHTML =
-            `${String(displayHour).padStart(2, "0")}:` +
-            `${String(m).padStart(2, "0")}:` +
-            `${String(s).padStart(2, "0")} ${period}`;
-
-        // Large Clock
-
-        bigClock.innerHTML =
-            `${String(displayHour).padStart(2, "0")}:` +
-            `${String(m).padStart(2, "0")} ${period}`;
-
-        // Date
-
-        date.innerHTML = now.toLocaleDateString("en-US", {
-
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-
-        });
-
-        // Part 3B will use this
-
-        window.currentHour = h;
-
-    }
-
-    updateClock();
-
-    setInterval(updateClock, 1000);
-
-    // ===============================
-    // Manual Time
-    // ===============================
-
-    setTime.addEventListener("click", () => {
-
-        let h = parseInt(hour.value);
-
-        let m = parseInt(minute.value);
-
-        if (ampm.value === "PM" && h !== 12) {
-
-            h += 12;
-
-        }
-
-        if (ampm.value === "AM" && h === 12) {
-
-            h = 0;
-
-        }
-
-        manualDate = new Date();
-
-        manualDate.setHours(h);
-
-        manualDate.setMinutes(m);
-
-        manualDate.setSeconds(0);
-
-        liveMode = false;
-
-    });
-
-    // ===============================
-    // Resume Live Clock
-    // ===============================
-
-    liveBtn.addEventListener("click", () => {
-
-        liveMode = true;
-
-    });
-
-    // ===============================
-    // Remaining code comes in Part 3B
-    // ===============================
-
-});
-
-
-// =====================================
-// Background Elements
-// =====================================
-
-const scene = document.getElementById("scene");
-
-const day1 = document.querySelector(".bg-day-1");
-const day2 = document.querySelector(".bg-day-2");
-
-const night1 = document.querySelector(".bg-night-1");
-const night2 = document.querySelector(".bg-night-2");
-
-const hoverLabel = document.getElementById("hoverLabel");
-
-// =====================================
-// Background Function
-// =====================================
-
-function updateBackground() {
-
-    const hour = window.currentHour;
-
-    // ---------------- DAY ----------------
-
-    if (hour >= 6 && hour < 19) {
-
-        scene.classList.remove("night");
-        scene.classList.add("day");
-
-        day1.style.opacity = "1";
-        day2.style.opacity = "0";
-
-        night1.style.opacity = "0";
-        night2.style.opacity = "0";
-
-        hoverLabel.textContent = "Brighter Morning";
-
-    }
-
-    // ---------------- NIGHT ----------------
-
-    else {
-
-        scene.classList.remove("day");
-        scene.classList.add("night");
-
-        day1.style.opacity = "0";
-        day2.style.opacity = "0";
-
-        night1.style.opacity = "1";
-        night2.style.opacity = "0";
-
-        hoverLabel.textContent = "Darker Night";
-
-    }
-
+// ================= ELEMENT REFERENCES =================
+
+const scene       = document.getElementById('scene');
+const clockEl      = document.getElementById('clock');
+const bigClockEl   = document.getElementById('bigClock');
+const dateEl       = document.getElementById('date');
+const hourSel      = document.getElementById('hour');
+const minuteSel    = document.getElementById('minute');
+const ampmSel      = document.getElementById('ampm');
+const setBtn       = document.getElementById('setTime');
+const liveBtn      = document.getElementById('liveBtn');
+const hoverLabel   = document.getElementById('hoverLabel');
+const lightBtn     = document.getElementById('lightBtn');
+const darkBtn      = document.getElementById('darkBtn');
+
+const bgLayers = document.querySelectorAll('.bg-layer');
+
+let liveMode = true;
+let liveInterval = null;
+// manualDate holds the frozen point in time used whenever liveMode is false
+let manualDate = new Date();
+
+// ================= BUILD TIME DROPDOWNS =================
+
+function buildOptions(select, count, pad) {
+  for (let i = 1; i <= count; i++) {
+    const opt = document.createElement('option');
+    const value = pad ? String(i).padStart(2, '0') : i;
+    opt.value = value;
+    opt.textContent = value;
+    select.appendChild(opt);
+  }
 }
 
-updateBackground();
-
-// =====================================
-// Update Every Second
-// =====================================
-
-setInterval(updateBackground,1000);
-
-
-// =====================================
-// Hover Effect
-// =====================================
-
-scene.addEventListener("mouseenter",()=>{
-
-    hoverLabel.classList.remove("opacity-0");
-
-    hoverLabel.classList.add("opacity-100");
-
-    if(scene.classList.contains("day")){
-
-        day1.style.opacity="0";
-        day2.style.opacity="1";
-
-    }
-
-    else{
-
-        night1.style.opacity="0";
-        night2.style.opacity="1";
-
-    }
-
-});
-
-
-// =====================================
-// Mouse Leave
-// =====================================
-
-scene.addEventListener("mouseleave",()=>{
-
-    hoverLabel.classList.remove("opacity-100");
-
-    hoverLabel.classList.add("opacity-0");
-
-    if(scene.classList.contains("day")){
-
-        day1.style.opacity="1";
-        day2.style.opacity="0";
-
-    }
-
-    else{
-
-        night1.style.opacity="1";
-        night2.style.opacity="0";
-
-    }
-
-});
-
-
-// ======================================
-// THEME TOGGLE
-// ======================================
-
-const body = document.body;
-
-const lightBtn = document.getElementById("lightBtn");
-const darkBtn = document.getElementById("darkBtn");
-
-function setLightTheme() {
-
-    body.classList.add("light");
-    body.classList.remove("dark");
-
-    lightBtn.classList.add(
-        "bg-white",
-        "text-black"
-    );
-
-    darkBtn.classList.remove(
-        "bg-white",
-        "text-black"
-    );
-
-    localStorage.setItem("theme","light");
-
+// hour: 1-12
+buildOptions(hourSel, 12, true);
+// minute: 0-59 -> build 0..59
+hourSel.innerHTML = '';
+for (let h = 1; h <= 12; h++) {
+  const opt = document.createElement('option');
+  opt.value = h;
+  opt.textContent = String(h).padStart(2, '0');
+  hourSel.appendChild(opt);
+}
+for (let m = 0; m < 60; m++) {
+  const opt = document.createElement('option');
+  opt.value = m;
+  opt.textContent = String(m).padStart(2, '0');
+  minuteSel.appendChild(opt);
 }
 
-function setDarkTheme() {
+// ================= BACKGROUND SWITCHING =================
 
-    body.classList.add("dark");
-    body.classList.remove("light");
-
-    darkBtn.classList.add(
-        "bg-white",
-        "text-black"
-    );
-
-    lightBtn.classList.remove(
-        "bg-white",
-        "text-black"
-    );
-
-    localStorage.setItem("theme","dark");
-
+// Decide which of the 4 background layers should be visible for a given hour (0-23)
+// 5am - 6pm  (5-18)  -> "day" bucket   (uses day-1 for the morning half, day-2 for the afternoon half)
+// 7pm - 5am (19-23,0-4) -> "night" bucket (uses night-1 for evening, night-2 for the deep-night/pre-dawn half)
+function layerForHour(hour) {
+  if (hour >= 5 && hour < 12) return 'bg-day-1';    // morning
+  if (hour >= 12 && hour <= 18) return 'bg-day-2';  // afternoon
+  if (hour >= 19 || hour === 0) return 'bg-night-1'; // evening / just after midnight
+  return 'bg-night-2'; // 1am - 4:59am, deep night
 }
 
-// Buttons
-
-lightBtn.addEventListener("click",setLightTheme);
-
-darkBtn.addEventListener("click",setDarkTheme);
-
-
-// ======================================
-// LOAD SAVED THEME
-// ======================================
-
-const savedTheme = localStorage.getItem("theme");
-
-if(savedTheme==="light"){
-
-    setLightTheme();
-
-}
-else{
-
-    setDarkTheme();
-
+function labelForHour(hour) {
+  if (hour >= 5 && hour < 12) return 'Brighter Morning';
+  if (hour >= 12 && hour <= 18) return 'Brighter Afternoon';
+  return 'Brighter Night';
 }
 
+let currentHourBucket = null;
 
-// ======================================
-// BUTTON HOVER EFFECT
-// ======================================
+function applyBackgroundForHour(hour) {
+  const targetClass = layerForHour(hour);
+  bgLayers.forEach(layer => {
+    layer.classList.toggle('active', layer.classList.contains(targetClass));
+  });
+  currentHourBucket = hour;
+}
 
-const featureButtons =
-document.querySelectorAll(".featureBtn");
+// ================= DISPLAY UPDATES =================
 
-featureButtons.forEach(btn=>{
+const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-    btn.addEventListener("mouseenter",()=>{
+function renderTime(date) {
+  const hour24 = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
 
-        btn.style.transform =
-        "translateY(-6px) scale(1.05)";
+  // top-right small clock, 24hr HH:MM:SS
+  clockEl.textContent =
+    String(hour24).padStart(2, '0') + ':' +
+    String(minutes).padStart(2, '0') + ':' +
+    String(seconds).padStart(2, '0');
 
-        btn.style.boxShadow =
-        "0 10px 35px rgba(255,255,255,.25)";
+  // big 12hr clock with AM/PM
+  let hour12 = hour24 % 12;
+  if (hour12 === 0) hour12 = 12;
+  const ampm = hour24 >= 12 ? 'PM' : 'AM';
+  bigClockEl.textContent =
+    String(hour12).padStart(2, '0') + ':' +
+    String(minutes).padStart(2, '0') + ' ' + ampm;
 
-    });
+  dateEl.textContent = weekdays[date.getDay()];
 
-    btn.addEventListener("mouseleave",()=>{
+  applyBackgroundForHour(hour24);
+}
 
-        btn.style.transform =
-        "translateY(0) scale(1)";
+// ================= LIVE MODE =================
 
-        btn.style.boxShadow =
-        "none";
+function startLive() {
+  liveMode = true;
+  liveBtn.classList.add('active');
+  setBtn.classList.remove('active');
+  if (liveInterval) clearInterval(liveInterval);
+  renderTime(new Date());
+  liveInterval = setInterval(() => renderTime(new Date()), 1000);
+}
 
-    });
+function stopLive() {
+  liveMode = false;
+  liveBtn.classList.remove('active');
+  if (liveInterval) clearInterval(liveInterval);
+}
 
+liveBtn.addEventListener('click', startLive);
+
+// ================= MANUAL "SET" TIME =================
+
+setBtn.addEventListener('click', () => {
+  stopLive();
+
+  const hour12 = parseInt(hourSel.value, 10);
+  const minutes = parseInt(minuteSel.value, 10);
+  const ampm = ampmSel.value;
+
+  let hour24 = hour12 % 12;
+  if (ampm === 'PM') hour24 += 12;
+
+  manualDate = new Date();
+  manualDate.setHours(hour24, minutes, 0, 0);
+
+  setBtn.classList.add('active');
+  renderTime(manualDate);
 });
 
+// ================= HOVER: BRIGHTEN PICTURE =================
 
-// ======================================
-// NAVBAR SHADOW ON SCROLL
-// ======================================
-
-const nav = document.querySelector("nav");
-
-window.addEventListener("scroll",()=>{
-
-    if(window.scrollY>20){
-
-        nav.classList.add(
-            "shadow-2xl"
-        );
-
-    }
-
-    else{
-
-        nav.classList.remove(
-            "shadow-2xl"
-        );
-
-    }
-
+scene.addEventListener('mouseenter', () => {
+  scene.classList.add('is-hovering');
+  hoverLabel.textContent = labelForHour(currentHourBucket === null ? new Date().getHours() : currentHourBucket);
+  hoverLabel.classList.add('show');
 });
 
+scene.addEventListener('mouseleave', () => {
+  scene.classList.remove('is-hovering');
+  hoverLabel.classList.remove('show');
+});
 
-// ======================================
-// CLOCK ANIMATION
-// ======================================
+// ================= LIGHT / DARK THEME TOGGLE =================
 
-setInterval(()=>{
+lightBtn.addEventListener('click', () => {
+  document.body.classList.add('light-theme');
+  lightBtn.classList.add('bg-white', 'text-black');
+  darkBtn.classList.remove('bg-white', 'text-black');
+});
 
-    bigClock.animate(
+darkBtn.addEventListener('click', () => {
+  document.body.classList.remove('light-theme');
+  darkBtn.classList.add('bg-white', 'text-black');
+  lightBtn.classList.remove('bg-white', 'text-black');
+});
 
-        [
+// ================= INIT =================
 
-            {
-                opacity:0.85
-            },
+// default dropdown values to the current time so "Set" starts sensible
+(function initDropdownsToNow() {
+  const now = new Date();
+  let h12 = now.getHours() % 12;
+  if (h12 === 0) h12 = 12;
+  hourSel.value = h12;
+  minuteSel.value = now.getMinutes();
+  ampmSel.value = now.getHours() >= 12 ? 'PM' : 'AM';
+})();
 
-            {
-                opacity:1
-            }
-
-        ],
-
-        {
-
-            duration:900
-
-        }
-
-    );
-
-},1000);
-
-
-// ======================================
-// INITIALIZE
-// ======================================
-
-updateClock();
-
-updateBackground();
-
-console.log(
-"Dashboard Loaded Successfully 🚀"
-);
+startLive();

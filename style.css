@@ -1,366 +1,139 @@
-/* ===========================
-   GOOGLE FONT
-=========================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Space Grotesk',sans-serif;
+* {
+  font-family: 'Space Grotesk', sans-serif;
+  box-sizing: border-box;
 }
 
-body{
-    overflow:hidden;
-    background:#000;
+#clock, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
 }
 
-/* ===========================
-   BACKGROUND
-=========================== */
-
-.bg-layer{
-    position:absolute;
-    inset:0;
-
-    background-size:cover;
-    background-position:center;
-
-    transition:opacity 1s ease,
-               transform 1.2s ease;
-
-    transform:scale(1);
+html, body {
+  margin: 0;
+  height: 100%;
 }
 
-/* Visible by default */
+/* ================= BACKGROUND LAYERS ================= */
 
-.bg-day-1{
-    opacity:1;
+#scene {
+  overflow: hidden;
 }
 
-.bg-day-2{
-    opacity:0;
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  z-index: 0;
+  transition: opacity 1.2s ease-in-out, filter 0.4s ease-in-out;
+  filter: brightness(1);
 }
 
-.bg-night-1{
-    opacity:0;
+/* whichever layer has .active is the one currently shown */
+.bg-layer.active {
+  opacity: 1;
 }
 
-.bg-night-2{
-    opacity:0;
+/* when hovering the scene, brighten only the active picture */
+#scene.is-hovering .bg-layer.active {
+  filter: brightness(1.25) saturate(1.1);
 }
 
-/* ===========================
-   MORNING HOVER
-=========================== */
-
-.scene.day:hover .bg-day-1{
-    opacity:0;
+#dimOverlay {
+  z-index: 1;
+  pointer-events: none;
+  transition: background-color 0.4s ease-in-out;
 }
 
-.scene.day:hover .bg-day-2{
-    opacity:1;
-    transform:scale(1.04);
+/* ================= GLASS UI ================= */
+
+.glass {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ===========================
-   NIGHT HOVER
-=========================== */
-
-.scene.night:hover .bg-night-1{
-    opacity:0;
+.glassInput {
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  outline: none;
 }
 
-.scene.night:hover .bg-night-2{
-    opacity:1;
-    transform:scale(1.04);
+.glassButton {
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
-/* ===========================
-   GLASS EFFECT
-=========================== */
-
-.glass{
-
-    background:rgba(255,255,255,.12);
-
-    backdrop-filter:blur(18px);
-
-    -webkit-backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    box-shadow:
-
-    0 8px 32px rgba(0,0,0,.25);
-
+.glassButton:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
-/* ===========================
-   NAV INPUTS
-=========================== */
-
-.glassInput{
-
-    background:rgba(255,255,255,.15);
-
-    color:white;
-
-    border:none;
-
-    outline:none;
-
-    padding:7px 12px;
-
-    border-radius:10px;
-
-    font-size:13px;
-
+.glassButton.active {
+  background: #fff;
+  color: #000;
 }
 
-.glassInput option{
-    color:black;
+/* ================= HOVER LABEL ================= */
+
+#hoverLabel {
+  pointer-events: none;
+  transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+  transform: translate(-50%, -6px);
+  color: #fff;
 }
 
-/* ===========================
-   BUTTON
-=========================== */
-
-.glassButton{
-
-    padding:7px 18px;
-
-    border-radius:10px;
-
-    color:white;
-
-    background:rgba(255,255,255,.15);
-
-    transition:.35s;
-
+#hoverLabel.show {
+  opacity: 1 !important;
+  transform: translate(-50%, 0);
 }
 
-.glassButton:hover{
+/* ================= FEATURE BUTTONS ================= */
 
-    background:white;
-
-    color:black;
-
+.featureBtn {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  text-decoration: none;
+  gap: 2px;
+  transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
-/* ===========================
-   FEATURE BUTTON
-=========================== */
-
-.featureBtn{
-
-    width:72px;
-
-    height:72px;
-
-    border-radius:22px;
-
-    background:rgba(255,255,255,.12);
-
-    backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:4px;
-
-    color:white;
-
-    font-size:24px;
-
-    text-decoration:none;
-
-    transition:.35s;
-
+.featureBtn span {
+  font-size: 0.6rem;
+  font-weight: 500;
 }
 
-.featureBtn span{
-
-    font-size:11px;
-
+.featureBtn:hover {
+  transform: translateY(-4px);
+  background: #fff;
 }
 
-.featureBtn:hover{
+/* ================= LIGHT THEME ================= */
 
-    transform:translateY(-5px);
-
-    background:rgba(255,255,255,.22);
-
+body.light-theme #dimOverlay {
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
-/* ===========================
-   HOVER LABEL
-=========================== */
-
-#hoverLabel{
-
-    color:white;
-
-    font-size:13px;
-
-    letter-spacing:2px;
-
-}
-
-/* ===========================
-   LIGHT THEME
-=========================== */
-
-body.light{
-
-    background:#f3f4f6;
-
-}
-
-body.light .glass{
-
-    background:rgba(255,255,255,.45);
-
-    border:1px solid rgba(255,255,255,.6);
-
-}
-
-body.light h1,
-body.light h2,
-body.light p,
-body.light span,
-body.light a{
-
-    color:#111827;
-
-}
-
-body.light .glassInput{
-
-    background:white;
-
-    color:black;
-
-}
-
-body.light .glassButton{
-
-    background:white;
-
-    color:black;
-
-}
-
-body.light .featureBtn{
-
-    background:rgba(255,255,255,.55);
-
-    color:black;
-
-}
-
-/* ===========================
-   CLOCK
-=========================== */
-
-#bigClock{
-
-    letter-spacing:1px;
-
-    line-height:1.1;
-
-}
-
-/* ===========================
-   SCROLLBAR
-=========================== */
-
-::-webkit-scrollbar{
-
-    width:8px;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-    background:#555;
-
-    border-radius:20px;
-
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-
-@media(max-width:900px){
-
-nav{
-
-    flex-direction:column;
-
-    gap:12px;
-
-}
-
-.featureBtn{
-
-    width:60px;
-
-    height:60px;
-
-    font-size:20px;
-
-}
-
-.featureBtn span{
-
-    font-size:10px;
-
-}
-
-#bigClock{
-
-    font-size:38px;
-
-}
-
-}
-
-@media(max-width:640px){
-
-.featureBtn{
-
-    width:55px;
-
-    height:55px;
-
-}
-
-.featureBtn span{
-
-    display:none;
-
-}
-
-.glassInput{
-
-    width:58px;
-
-    font-size:12px;
-
-}
-
-.glassButton{
-
-    padding:6px 10px;
-
-}
-
+body.light-theme #clock,
+body.light-theme #bigClock {
+  color: #111;
 }
