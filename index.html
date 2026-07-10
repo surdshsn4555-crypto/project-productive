@@ -3,107 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="dashboard.css">
+
 <title>Productivity Dashboard</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="style.css">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="style.css">
+
 </head>
-<body class="bg-black">
 
-<div class="scene relative w-full h-screen overflow-hidden select-none" id="scene" data-period="day">
+<body class="overflow-hidden bg-black">
 
-  <!-- Day: base (soft morning light) -->
-  <div class="bg-layer bg-day-1" style="background-image:url(/Image/dawid-zawila--G3rw6Y02D0-unsplash.jpg);"></div>
-  <!-- Day: hover reveal (brighter, more lit) -->
-  <div class="bg-layer bg-day-2" style="background-image:url(/Image/nicolas-lysandrou-IHqt0u7G48Q-unsplash.jpg);"></div>
-  <!-- Night: base (misty blue night, matches reference) -->
-  <div class="bg-layer bg-night-1" style="background-image:url(/Image/troy-olson-qxXnrwy37CI-unsplash.jpg);"></div>
-  <!-- Night: hover reveal (deeper, darker night) -->
-  <div class="bg-layer bg-night-2" style="background-image:url(/Image/claudio-testa-fb_CZ4hZXWo-unsplash.jpg);"></div>
+<div id="scene" class="relative w-full h-screen">
 
-  <!-- readability wash -->
-  <div class="wash absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-slate-950/40 pointer-events-none"></div>
+    <!-- Background Images -->
 
-  <!-- top bar -->
-  <div id="topbar-wrap" class="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-2 mono text-[11px] ui-text-secondary bg-white/5 backdrop-blur-md border-b border-white/10">
-    <span class="tracking-wide ui-text-secondary">Productivity Dashboard</span>
+    <div class="bg-layer bg-day-1"
+    style="background-image:url('images/morning1.jpg')"></div>
 
-    <div class="flex items-center gap-3">
-      <!-- light / dark theme toggle -->
-      <div class="flex items-center gap-0.5 bg-slate-950/40 border border-white/10 rounded-full p-0.5" id="theme-toggle-group">
-        <button id="theme-light-btn" class="theme-toggle-btn" title="Light theme">☀️</button>
-        <button id="theme-dark-btn" class="theme-toggle-btn active" title="Dark theme">🌙</button>
-      </div>
+    <div class="bg-layer bg-day-2"
+    style="background-image:url('images/morning2.jpg')"></div>
 
-      <!-- manual time setter -->
-      <div class="ui-pill flex items-center gap-1.5 bg-slate-950/40 border border-white/10 rounded-full px-2 py-1">
-        <select id="hour-select" class="bg-transparent ui-text-secondary outline-none mono text-[11px] appearance-none px-1"></select>
-        <span class="ui-text-tertiary">:</span>
-        <select id="minute-select" class="bg-transparent ui-text-secondary outline-none mono text-[11px] appearance-none px-1"></select>
-        <select id="period-select" class="bg-transparent ui-text-secondary outline-none mono text-[11px] appearance-none px-1">
-          <option value="AM">AM</option>
-          <option value="PM">PM</option>
-        </select>
-        <button id="set-time-btn" class="ml-1 px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 ui-text-secondary transition-colors">Set</button>
-        <button id="live-time-btn" class="px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 ui-text-tertiary transition-colors" title="Resume live clock">● Live</button>
-      </div>
-      <span class="tracking-wide ui-text-secondary" id="topbar-clock">--:--:--</span>
+    <div class="bg-layer bg-night-1"
+    style="background-image:url('images/night1.jpg')"></div>
+
+    <div class="bg-layer bg-night-2"
+    style="background-image:url('images/night2.jpg')"></div>
+
+    <div class="absolute inset-0 bg-black/30"></div>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav
+    class="absolute top-0 left-0 right-0
+    flex justify-between items-center
+    px-8 py-3
+    backdrop-blur-xl
+    bg-white/10
+    border-b border-white/20">
+
+        <h1
+        class="text-white text-lg md:text-xl font-semibold">
+        Productivity Dashboard
+        </h1>
+
+
+        <div class="flex items-center gap-4">
+
+            <!-- Theme -->
+
+            <div
+            class="flex bg-black/30 rounded-full p-1">
+
+                <button
+                id="lightBtn"
+                class="px-3 py-1 rounded-full">
+                ☀️
+                </button>
+
+                <button
+                id="darkBtn"
+                class="px-3 py-1 rounded-full bg-white text-black">
+                🌙
+                </button>
+
+            </div>
+
+            <!-- Time -->
+
+            <div
+            class="flex gap-1">
+
+                <select id="hour"
+                class="glassInput"></select>
+
+                <select id="minute"
+                class="glassInput"></select>
+
+                <select id="ampm"
+                class="glassInput">
+
+                    <option>AM</option>
+                    <option>PM</option>
+
+                </select>
+
+                <button
+                id="setTime"
+                class="glassButton">
+                Set
+                </button>
+
+                <button
+                id="liveBtn"
+                class="glassButton">
+                Live
+                </button>
+
+            </div>
+
+            <span
+            id="clock"
+            class="text-white text-sm font-mono">
+            00:00:00
+            </span>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= HOVER LABEL ================= -->
+
+    <div
+    id="hoverLabel"
+    class="absolute
+    top-20
+    left-1/2
+    -translate-x-1/2
+
+    glass
+
+    px-4
+    py-2
+    rounded-full
+
+    opacity-0
+
+    transition">
+
+    Brighter View
+
     </div>
-  </div>
 
-  <!-- hover hint -->
-  <div id="hint-pill" class="hint absolute top-14 left-1/2 -translate-x-1/2 opacity-0 -translate-y-1 mono text-[11px] ui-text-secondary bg-slate-950/40 px-3 py-1 rounded-full border border-white/10">
-    <span id="hint-label">brighter day</span>
-  </div>
 
-  <!-- main clock / weather card, bottom-left, like the reference -->
-  <div class="absolute left-8 bottom-10 md:left-14 md:bottom-14 flex flex-col md:flex-row items-start gap-0 rounded-2xl overflow-hidden glass shadow-2xl shadow-black/40">
+    <!-- ================= WEATHER CARD ================= -->
 
-    <!-- date + time -->
-    <div class="px-7 py-6 min-w-[280px]">
-      <div class="mono text-xs tracking-[0.2em] ui-text-secondary uppercase" id="date-line">Saturday, 4 July 2026</div>
-      <div class="ui-text-primary text-white text-4xl md:text-5xl font-semibold tracking-tight mt-1 leading-none" id="time-line">
-        10:27<span class="tick ui-text-secondary">:</span>15 <span class="text-2xl align-top ui-text-secondary">PM</span>
-      </div>
-      <div class="mt-3 ui-text-secondary text-sm tracking-wide" id="location-line">Bokaro (JH)</div>
+    <div
+    class="absolute
+
+    left-8
+    bottom-8
+
+    glass
+
+    rounded-3xl
+
+    flex
+    flex-col
+
+    md:flex-row
+
+    overflow-hidden">
+
+        <div
+        class="p-8">
+
+            <p
+            id="date"
+            class="uppercase tracking-widest text-gray-300 text-sm">
+            Saturday
+            </p>
+
+            <h2
+            id="bigClock"
+            class="text-5xl font-bold text-white mt-2">
+            08:30 PM
+            </h2>
+
+            <p
+            class="mt-3 text-gray-300">
+            Nawada (Bihar)
+            </p>
+
+        </div>
+
+        <div class="w-px bg-white/20 hidden md:block"></div>
+
+        <div
+        class="p-8">
+
+            <h2
+            class="text-white text-4xl font-bold">
+            29°
+            </h2>
+
+            <p class="text-gray-300 mt-2">
+
+            Sunny Morning
+
+            </p>
+
+            <div
+            class="mt-6 text-gray-300 text-sm space-y-2">
+
+                <p>Humidity : 74%</p>
+
+                <p>Wind : 14 km/h</p>
+
+                <p>Heat Index : 34°C</p>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="ui-hairline hidden md:block w-px self-stretch bg-white/15"></div>
 
-    <!-- weather -->
-    <div class="px-7 py-6 min-w-[220px]">
-      <div class="ui-text-primary text-white text-3xl font-semibold" id="temp-line">29.3°C</div>
-      <div class="ui-text-secondary text-sm mt-1" id="condition-line">Patchy rain nearby</div>
-      <div class="mono text-[11px] ui-text-tertiary mt-4 space-y-1 leading-relaxed">
-        <div>Heat index<span class="ui-text-secondary">33.9°C</span></div>
-        <div>Humidity<span class="ui-text-secondary">73%</span></div>
-        <div>Wind<span class="ui-text-secondary">14.8 km/h</span></div>
-      </div>
+    <!-- ================= BUTTONS ================= -->
+
+    <div
+    class="absolute
+
+    right-6
+
+    top-1/2
+
+    -translate-y-1/2
+
+    flex
+
+    flex-col
+
+    gap-5">
+
+        <a href="todo.html"
+        class="featureBtn">
+
+        ✅
+        <span>Task</span>
+
+        </a>
+
+        <a href="goal.html"
+        class="featureBtn">
+
+        🎯
+        <span>Goal</span>
+
+        </a>
+
+        <a href="planner.html"
+        class="featureBtn">
+
+        🗓
+        <span>Planner</span>
+
+        </a>
+
+        <a href="quotes.html"
+        class="featureBtn">
+
+        💬
+        <span>Quotes</span>
+
+        </a>
+
+        <a href="timer.html"
+        class="featureBtn">
+
+        ⏱
+        <span>Timer</span>
+
+        </a>
+
     </div>
-  </div>
 
-  <!-- feature launcher rail -->
-  <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-4">
-    <button id="todo-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="To-Do list">
-      <a href="todo.html">✅<span class="text-[10px] mono ui-text-secondary">Task</span></a>
-    </button>
-    <button id="goal-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Daily goals">
-      <span><a href="goal.html">🎯</a></span>
-      <span class="text-[10px] mono ui-text-secondary"><a href="goal.html">Goal</a></span>
-    </button>
-    <button id="planner-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Daily planner">
-      <span><a href="schedule.html">🗓️</a></span><span class="text-[10px] mono ui-text-secondary"><a href="schedule.html">Planner</a></span>
-    </button>
-    <button id="quotes-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Motivation quote">
-     <a href="quotes.html">💬<span class="text-[10px] mono ui-text-secondary">Quotes</span></a> 
-    </button>
-    <button id="timer-toggle-btn" class="w-16 h-16 rounded-2xl glass flex flex-col items-center justify-center gap-0.5 ui-text-primary text-lg cursor-pointer hover:scale-105 transition-transform" title="Pomodoro timer">
-      <a href="timer.html">⏱️<span class="text-[10px] mono ui-text-secondary">Timer</span>
-    </button></a>
-  </div>
 </div>
+
 <script src="script.js"></script>
+
 </body>
 </html>

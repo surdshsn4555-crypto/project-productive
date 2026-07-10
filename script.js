@@ -1,246 +1,459 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    // =========================
+    // ===============================
     // Elements
-    // =========================
-    const clock = document.getElementById("topbar-clock");
-    const timeLine = document.getElementById("time-line");
-    const dateLine = document.getElementById("date-line");
+    // ===============================
 
-    const hourSelect = document.getElementById("hour-select");
-    const minuteSelect = document.getElementById("minute-select");
-    const periodSelect = document.getElementById("period-select");
+    const clock = document.getElementById("clock");
+    const bigClock = document.getElementById("bigClock");
+    const date = document.getElementById("date");
 
-    const setBtn = document.getElementById("set-time-btn");
-    const liveBtn = document.getElementById("live-time-btn");
+    const hour = document.getElementById("hour");
+    const minute = document.getElementById("minute");
+    const ampm = document.getElementById("ampm");
 
-    const scene = document.getElementById("scene");
+    const setTime = document.getElementById("setTime");
+    const liveBtn = document.getElementById("liveBtn");
 
-    const lightBtn = document.getElementById("theme-light-btn");
-    const darkBtn = document.getElementById("theme-dark-btn");
-
-    const hint = document.getElementById("hint-pill");
-    const hintLabel = document.getElementById("hint-label");
-
-    let liveClock = true;
+    let liveMode = true;
     let manualDate = new Date();
 
-    // =========================
-    // Fill Dropdowns
-    // =========================
+    // ===============================
+    // Fill Select Options
+    // ===============================
+
     for (let i = 1; i <= 12; i++) {
+
         const option = document.createElement("option");
+
         option.value = i;
         option.textContent = String(i).padStart(2, "0");
-        hourSelect.appendChild(option);
+
+        hour.appendChild(option);
+
     }
 
     for (let i = 0; i < 60; i++) {
+
         const option = document.createElement("option");
+
         option.value = i;
         option.textContent = String(i).padStart(2, "0");
-        minuteSelect.appendChild(option);
+
+        minute.appendChild(option);
+
     }
 
-    // =========================
-    // Clock Function
-    // =========================
+    // ===============================
+    // Update Clock
+    // ===============================
+
     function updateClock() {
 
         let now;
 
-        if (liveClock) {
+        if (liveMode) {
+
             now = new Date();
+
         } else {
+
             now = manualDate;
+
             manualDate = new Date(manualDate.getTime() + 1000);
+
         }
 
-        let hours = now.getHours();
-        let minutes = now.getMinutes();
-        let seconds = now.getSeconds();
+        let h = now.getHours();
+        let m = now.getMinutes();
+        let s = now.getSeconds();
 
-        const period = hours >= 12 ? "PM" : "AM";
+        let period = h >= 12 ? "PM" : "AM";
 
-        let displayHour = hours % 12;
-        displayHour = displayHour === 0 ? 12 : displayHour;
+        let displayHour = h % 12;
 
-        clock.textContent =
-            `${String(displayHour).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")} ${period}`;
+        if (displayHour === 0) {
 
-        timeLine.innerHTML =
-            `${String(displayHour).padStart(2,"0")}:${String(minutes).padStart(2,"0")}<span class="tick">:</span>${String(seconds).padStart(2,"0")} <span class="text-2xl">${period}</span>`;
+            displayHour = 12;
 
-        dateLine.textContent = now.toLocaleDateString("en-US", {
+        }
+
+        // Navbar Clock
+
+        clock.innerHTML =
+            `${String(displayHour).padStart(2, "0")}:` +
+            `${String(m).padStart(2, "0")}:` +
+            `${String(s).padStart(2, "0")} ${period}`;
+
+        // Large Clock
+
+        bigClock.innerHTML =
+            `${String(displayHour).padStart(2, "0")}:` +
+            `${String(m).padStart(2, "0")} ${period}`;
+
+        // Date
+
+        date.innerHTML = now.toLocaleDateString("en-US", {
+
             weekday: "long",
-            year: "numeric",
             month: "long",
-            day: "numeric"
+            day: "numeric",
+            year: "numeric"
+
         });
 
-        if (hours >= 6 && hours < 18) {
-            scene.dataset.period = "day";
-        } else {
-            scene.dataset.period = "night";
-        }
+        // Part 3B will use this
+
+        window.currentHour = h;
+
     }
 
     updateClock();
+
     setInterval(updateClock, 1000);
 
-    // =========================
-    // Set Manual Time
-    // =========================
-    setBtn.addEventListener("click", () => {
+    // ===============================
+    // Manual Time
+    // ===============================
 
-        let h = parseInt(hourSelect.value);
-        let m = parseInt(minuteSelect.value);
-        let p = periodSelect.value;
+    setTime.addEventListener("click", () => {
 
-        if (p === "PM" && h !== 12) h += 12;
-        if (p === "AM" && h === 12) h = 0;
+        let h = parseInt(hour.value);
 
-        manualDate = new Date();
-        manualDate.setHours(h);
-        manualDate.setMinutes(m);
-        manualDate.setSeconds(0);
+        let m = parseInt(minute.value);
 
-        liveClock = false;
-    });
+        if (ampm.value === "PM" && h !== 12) {
 
-    // =========================
-    // Resume Live Time
-    // =========================
-    liveBtn.addEventListener("click", () => {
-        liveClock = true;
-    });
+            h += 12;
 
-    // =========================
-    // Theme Toggle
-    // =========================
-    lightBtn.addEventListener("click", () => {
-
-        document.body.classList.remove("bg-black");
-        document.body.classList.add("bg-white");
-
-        lightBtn.classList.add("bg-white", "text-black");
-        darkBtn.classList.remove("bg-white", "text-black");
-    });
-
-    darkBtn.addEventListener("click", () => {
-
-        document.body.classList.remove("bg-white");
-        document.body.classList.add("bg-black");
-
-        darkBtn.classList.add("bg-white", "text-black");
-        lightBtn.classList.remove("bg-white", "text-black");
-    });
-
-    // =========================
-    // Hover Hint
-    // =========================
-    scene.addEventListener("mouseenter", () => {
-
-        hint.classList.remove("opacity-0", "-translate-y-1");
-        hint.classList.add("opacity-100", "translate-y-0");
-
-        if (scene.dataset.period === "day") {
-            hintLabel.textContent = "Brighter Day";
-        } else {
-            hintLabel.textContent = "Darker Night";
         }
 
+        if (ampm.value === "AM" && h === 12) {
+
+            h = 0;
+
+        }
+
+        manualDate = new Date();
+
+        manualDate.setHours(h);
+
+        manualDate.setMinutes(m);
+
+        manualDate.setSeconds(0);
+
+        liveMode = false;
+
     });
 
-    scene.addEventListener("mouseleave", () => {
+    // ===============================
+    // Resume Live Clock
+    // ===============================
 
-        hint.classList.add("opacity-0", "-translate-y-1");
-        hint.classList.remove("opacity-100");
+    liveBtn.addEventListener("click", () => {
+
+        liveMode = true;
 
     });
 
-    // =========================
-    // Feature Buttons
-    // =========================
-    document.getElementById("todo-toggle-btn").onclick = () => {
-        alert("To-Do List Coming Soon!");
-    };
-
-    document.getElementById("goal-toggle-btn").onclick = () => {
-        alert("Daily Goals Coming Soon!");
-    };
-
-    document.getElementById("planner-toggle-btn").onclick = () => {
-        alert("Planner Coming Soon!");
-    };
-
-    document.getElementById("quotes-toggle-btn").onclick = () => {
-        const quotes = [
-            "Stay focused.",
-            "Dream big.",
-            "Never stop learning.",
-            "Success is built daily.",
-            "Discipline beats motivation."
-        ];
-
-        alert(quotes[Math.floor(Math.random() * quotes.length)]);
-    };
-
-    document.getElementById("timer-toggle-btn").onclick = () => {
-        alert("Pomodoro Timer Coming Soon!");
-    };
+    // ===============================
+    // Remaining code comes in Part 3B
+    // ===============================
 
 });
 
 
-// =======================
-// Theme Toggle
-// =======================
+// =====================================
+// Background Elements
+// =====================================
 
-const body = document.body;
 const scene = document.getElementById("scene");
 
-const lightBtn = document.getElementById("theme-light-btn");
-const darkBtn = document.getElementById("theme-dark-btn");
+const day1 = document.querySelector(".bg-day-1");
+const day2 = document.querySelector(".bg-day-2");
 
-// Set Dark Theme
-function setDarkTheme() {
-    body.classList.remove("bg-white");
-    body.classList.add("bg-black");
+const night1 = document.querySelector(".bg-night-1");
+const night2 = document.querySelector(".bg-night-2");
 
-    scene.classList.remove("light-theme");
-    scene.classList.add("dark-theme");
+const hoverLabel = document.getElementById("hoverLabel");
 
-    darkBtn.classList.add("bg-white", "text-black");
-    lightBtn.classList.remove("bg-white", "text-black");
+// =====================================
+// Background Function
+// =====================================
 
-    localStorage.setItem("theme", "dark");
+function updateBackground() {
+
+    const hour = window.currentHour;
+
+    // ---------------- DAY ----------------
+
+    if (hour >= 6 && hour < 19) {
+
+        scene.classList.remove("night");
+        scene.classList.add("day");
+
+        day1.style.opacity = "1";
+        day2.style.opacity = "0";
+
+        night1.style.opacity = "0";
+        night2.style.opacity = "0";
+
+        hoverLabel.textContent = "Brighter Morning";
+
+    }
+
+    // ---------------- NIGHT ----------------
+
+    else {
+
+        scene.classList.remove("day");
+        scene.classList.add("night");
+
+        day1.style.opacity = "0";
+        day2.style.opacity = "0";
+
+        night1.style.opacity = "1";
+        night2.style.opacity = "0";
+
+        hoverLabel.textContent = "Darker Night";
+
+    }
+
 }
 
-// Set Light Theme
+updateBackground();
+
+// =====================================
+// Update Every Second
+// =====================================
+
+setInterval(updateBackground,1000);
+
+
+// =====================================
+// Hover Effect
+// =====================================
+
+scene.addEventListener("mouseenter",()=>{
+
+    hoverLabel.classList.remove("opacity-0");
+
+    hoverLabel.classList.add("opacity-100");
+
+    if(scene.classList.contains("day")){
+
+        day1.style.opacity="0";
+        day2.style.opacity="1";
+
+    }
+
+    else{
+
+        night1.style.opacity="0";
+        night2.style.opacity="1";
+
+    }
+
+});
+
+
+// =====================================
+// Mouse Leave
+// =====================================
+
+scene.addEventListener("mouseleave",()=>{
+
+    hoverLabel.classList.remove("opacity-100");
+
+    hoverLabel.classList.add("opacity-0");
+
+    if(scene.classList.contains("day")){
+
+        day1.style.opacity="1";
+        day2.style.opacity="0";
+
+    }
+
+    else{
+
+        night1.style.opacity="1";
+        night2.style.opacity="0";
+
+    }
+
+});
+
+
+// ======================================
+// THEME TOGGLE
+// ======================================
+
+const body = document.body;
+
+const lightBtn = document.getElementById("lightBtn");
+const darkBtn = document.getElementById("darkBtn");
+
 function setLightTheme() {
-    body.classList.remove("bg-black");
-    body.classList.add("bg-white");
 
-    scene.classList.remove("dark-theme");
-    scene.classList.add("light-theme");
+    body.classList.add("light");
+    body.classList.remove("dark");
 
-    lightBtn.classList.add("bg-white", "text-black");
-    darkBtn.classList.remove("bg-white", "text-black");
+    lightBtn.classList.add(
+        "bg-white",
+        "text-black"
+    );
 
-    localStorage.setItem("theme", "light");
+    darkBtn.classList.remove(
+        "bg-white",
+        "text-black"
+    );
+
+    localStorage.setItem("theme","light");
+
 }
 
-// Button Events
-lightBtn.addEventListener("click", setLightTheme);
-darkBtn.addEventListener("click", setDarkTheme);
+function setDarkTheme() {
 
-// Load Saved Theme
+    body.classList.add("dark");
+    body.classList.remove("light");
+
+    darkBtn.classList.add(
+        "bg-white",
+        "text-black"
+    );
+
+    lightBtn.classList.remove(
+        "bg-white",
+        "text-black"
+    );
+
+    localStorage.setItem("theme","dark");
+
+}
+
+// Buttons
+
+lightBtn.addEventListener("click",setLightTheme);
+
+darkBtn.addEventListener("click",setDarkTheme);
+
+
+// ======================================
+// LOAD SAVED THEME
+// ======================================
+
 const savedTheme = localStorage.getItem("theme");
 
-if (savedTheme === "light") {
+if(savedTheme==="light"){
+
     setLightTheme();
-} else {
-    setDarkTheme();
+
 }
+else{
+
+    setDarkTheme();
+
+}
+
+
+// ======================================
+// BUTTON HOVER EFFECT
+// ======================================
+
+const featureButtons =
+document.querySelectorAll(".featureBtn");
+
+featureButtons.forEach(btn=>{
+
+    btn.addEventListener("mouseenter",()=>{
+
+        btn.style.transform =
+        "translateY(-6px) scale(1.05)";
+
+        btn.style.boxShadow =
+        "0 10px 35px rgba(255,255,255,.25)";
+
+    });
+
+    btn.addEventListener("mouseleave",()=>{
+
+        btn.style.transform =
+        "translateY(0) scale(1)";
+
+        btn.style.boxShadow =
+        "none";
+
+    });
+
+});
+
+
+// ======================================
+// NAVBAR SHADOW ON SCROLL
+// ======================================
+
+const nav = document.querySelector("nav");
+
+window.addEventListener("scroll",()=>{
+
+    if(window.scrollY>20){
+
+        nav.classList.add(
+            "shadow-2xl"
+        );
+
+    }
+
+    else{
+
+        nav.classList.remove(
+            "shadow-2xl"
+        );
+
+    }
+
+});
+
+
+// ======================================
+// CLOCK ANIMATION
+// ======================================
+
+setInterval(()=>{
+
+    bigClock.animate(
+
+        [
+
+            {
+                opacity:0.85
+            },
+
+            {
+                opacity:1
+            }
+
+        ],
+
+        {
+
+            duration:900
+
+        }
+
+    );
+
+},1000);
+
+
+// ======================================
+// INITIALIZE
+// ======================================
+
+updateClock();
+
+updateBackground();
+
+console.log(
+"Dashboard Loaded Successfully 🚀"
+);
