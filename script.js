@@ -67,14 +67,29 @@ function labelForHour(hour) {
   return 'Brighter Night';
 }
 
-let currentHourBucket = null;
+// each layer's hover partner - the picture shown when the user hovers the scene
+const altLayer = {
+  'bg-day-1':   'bg-day-2',
+  'bg-day-2':   'bg-day-1',
+  'bg-night-1': 'bg-night-2',
+  'bg-night-2': 'bg-night-1'
+};
 
-function applyBackgroundForHour(hour) {
-  const targetClass = layerForHour(hour);
+let currentHourBucket = null;
+let baseLayerClass = null; // the time-correct picture
+let isHovering = false;
+
+function showLayer(targetClass) {
   bgLayers.forEach(layer => {
     layer.classList.toggle('active', layer.classList.contains(targetClass));
   });
+}
+
+function applyBackgroundForHour(hour) {
+  baseLayerClass = layerForHour(hour);
   currentHourBucket = hour;
+  // if the user is currently hovering, keep showing the hover picture instead
+  showLayer(isHovering ? altLayer[baseLayerClass] : baseLayerClass);
 }
 
 // ================= DISPLAY UPDATES =================
@@ -143,17 +158,21 @@ setBtn.addEventListener('click', () => {
   renderTime(manualDate);
 });
 
-// ================= HOVER: BRIGHTEN PICTURE =================
+// ================= HOVER: SWAP TO ALTERNATE PICTURE =================
 
 scene.addEventListener('mouseenter', () => {
+  isHovering = true;
   scene.classList.add('is-hovering');
   hoverLabel.textContent = labelForHour(currentHourBucket === null ? new Date().getHours() : currentHourBucket);
   hoverLabel.classList.add('show');
+  if (baseLayerClass) showLayer(altLayer[baseLayerClass]);
 });
 
 scene.addEventListener('mouseleave', () => {
+  isHovering = false;
   scene.classList.remove('is-hovering');
   hoverLabel.classList.remove('show');
+  if (baseLayerClass) showLayer(baseLayerClass);
 });
 
 // ================= LIGHT / DARK THEME TOGGLE =================
