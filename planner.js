@@ -1,45 +1,44 @@
 // Select all planner textareas
 const planners = document.querySelectorAll(".planner");
 
-// Load saved data
-window.onload = function () {
+// Load planner data
+window.addEventListener("DOMContentLoaded", () => {
+
+    const savedPlanner = JSON.parse(localStorage.getItem("plannerData")) || [];
 
     planners.forEach((planner, index) => {
-
-        const savedData = localStorage.getItem("planner_" + index);
-
-        if (savedData) {
-            planner.value = savedData;
-        }
-
+        planner.value = savedPlanner[index] || "";
     });
 
-};
+});
 
-// Save automatically while typing
+// Save planner data
 planners.forEach((planner, index) => {
 
-    planner.addEventListener("input", function () {
+    planner.addEventListener("input", () => {
 
-        localStorage.setItem("planner_" + index, planner.value);
+        const plannerData = [];
+
+        planners.forEach(textarea => {
+            plannerData.push(textarea.value);
+        });
+
+        localStorage.setItem("plannerData", JSON.stringify(plannerData));
 
     });
 
 });
 
-// Clear all planner data
+// Clear planner
 function clearPlanner() {
 
     if (confirm("Clear all planner data?")) {
 
-        planners.forEach((planner, index) => {
-
+        planners.forEach(planner => {
             planner.value = "";
-
-            localStorage.removeItem("planner_" + index);
-
         });
 
+        localStorage.removeItem("plannerData");
     }
 
 }
